@@ -58,16 +58,33 @@ app.post("/users", async (req: Request, res: Response) => {
     );
     console.log(result);
     res.status(200).json({
-        success: true,
-        message: "Succuessfully saved to db"
-    })
+      success: true,
+      message: "Succuessfully saved to db",
+      data: result.rows[0],
+    });
   } catch (error: any) {
     res.status(500).json({
       success: false,
       message: error.message,
     });
   }
+});
 
+app.get("/users", async (req: Request, res: Response) => {
+  try {
+    const result = await pool.query(`SELECT * FROM users`);
+    res.status(200).json({
+      success: true,
+      message: "Data retrive successfully",
+      data: result.rows,
+    });
+  } catch (error: any) {
+    res.status(500).json({
+      success: false,
+      message: error.message,
+      details: error,
+    });
+  }
 });
 
 app.listen(port, () => {
